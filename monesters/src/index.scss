@@ -1,0 +1,30 @@
+@font-face {
+    font-family: 'Monster';
+    src: local('Monster'), url(./Fonts/Monster.ttf) format('truetype');
+    /* other formats include: 'woff2', 'truetype, 'opentype',
+                              'embedded-opentype', and 'svg' */
+  }
+  body {
+    font-family: 'Monster';
+    background-color: #1A053A;
+    height:100%;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #4e3b6b; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #3a2b50; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2F1557; 
+  }
+  

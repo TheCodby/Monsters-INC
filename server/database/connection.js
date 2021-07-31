@@ -1,18 +1,17 @@
-const MongoClient = require( 'mongodb' ).MongoClient;
-const url = "mongodb://localhost:27017";
+const url = process.env.MONGO_URL;
+const mongoose = require('mongoose');
 
-var _db;
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log(`Connected to ${url}`)
+});
 
 module.exports = {
 
-  connectToServer: function( callback ) {
-    MongoClient.connect( url,  { useNewUrlParser: true }, function( err, client ) {
-      _db  = client.db('monsters');
-      return callback( err );
-    } );
+  connectToServer: async function( callback ) {
+    await mongoose.connect( url,  { useNewUrlParser: true , useUnifiedTopology: true, useFindAndModify: false});
+    mongoose.Promise = global.Promise;
   },
-
-  getDb: function() {
-    return _db;
-  }
 };
+

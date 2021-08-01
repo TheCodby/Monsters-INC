@@ -1,6 +1,0 @@
-{
-    "env": {
-        "MONGO_URL": "mongodb://localhost:27017/monsters",
-        "rootURL": "http://localhost:3001"
-    }
-}

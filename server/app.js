@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 
 //Routes
 app.use('/employees', employeesRoutes)
-app.use('/account', accRoutes)
+app.use('/accounts', accRoutes)
 
 app.use((req, res, next) => {
   const error = new Error('Not found');

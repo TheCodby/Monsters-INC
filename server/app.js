@@ -5,6 +5,9 @@ const app = express();
 
 const employeesRoutes = require("./api/routes/employees");
 const accRoutes = require("./api/routes/accounts");
+const authRoutes = require("./api/routes/auth");
+
+const checkAuth = require('./api/middleware/check-auth')
 
 
 app.use(morgan("dev"));
@@ -27,8 +30,9 @@ app.use((req, res, next) => {
 });
 
 //Routes
-app.use('/employees', employeesRoutes)
-app.use('/accounts', accRoutes)
+app.use('/employees', checkAuth, employeesRoutes)
+app.use('/accounts', checkAuth, accRoutes)
+app.use('/auth', authRoutes)
 
 app.use((req, res, next) => {
   const error = new Error('Not found');

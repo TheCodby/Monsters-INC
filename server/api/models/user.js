@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const accountSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     _id: mongoose.Types.ObjectId,
     username: { type: String, required: true},
     email: { type: String, 
@@ -8,9 +8,9 @@ const accountSchema = new mongoose.Schema({
     unique: true},
     password: { type: String, required: true},
     created: { type: Date, default: Date.now },
-    roles: { type : Array , "default" : ["member"] },
-}, {collection: 'accounts', autoCreate: true})
+    roles: { type : Array , default: ["member"] },
+}, {collection: 'users', autoCreate: true})
 
-const Account = mongoose.model("Account", accountSchema);
+const User = mongoose.model("User", userSchema);
 
-module.exports = Account;
+module.exports = User;

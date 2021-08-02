@@ -1,12 +1,23 @@
 const jwt = require('jsonwebtoken');
-const Account = require("./api/model/account");
+const User = require("../api/models/user");
 
-exports.getRoles = (token) => {
-    const userData = jwt.verify(token, process.env.TOKEN_SECRET)
-    return userData.roles
+exports.getRoles = (id) => {
+    return User.findOne({_id: id})
+    .select("roles")
+    .exec()
+    .then(data => {
+        if(data != null){
+            return data.roles
+        }else{
+            return "No vaild entry found for provided ID";
+        }
+    })
+    .catch(err => {
+        return err;
+    });
 };
 exports.addRole = (id, role) => {
-    Account.findOneAndUpdate({_id: id}, { $push: { roles: role } }, {new: true})
+    return User.findOneAndUpdate({_id: id}, { $push: { roles: role } }, {new: true})
     .exec()
     .then(result => {
         return true;

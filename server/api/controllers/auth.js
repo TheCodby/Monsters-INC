@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 const jwt = require('jsonwebtoken');
-const Account = require("../models/Account");
+const User = require("../models/user");
 const validation = require('../../modules/validation')
 const bcrypt = require('bcrypt');
 const protectedFields = [];
 
 
-exports.accounts_register = async (req, res, next) => {
+exports.user_register = async (req, res, next) => {
     //Validation
     const { error } = await validation.registerValidation(req.body);
     if (error) { 
@@ -14,10 +14,10 @@ exports.accounts_register = async (req, res, next) => {
             error: error.details[0].message
         })
     }
-    Account.find({'email':req.body.email})
+    User.find({'email':req.body.email})
     .exec()
-    .then(account => {
-        if(account.length >= 1)
+    .then(user => {
+        if(user.length >= 1)
         {
             res.status(409).json({
                 message: "Username Or E-mail exists"
@@ -30,26 +30,26 @@ exports.accounts_register = async (req, res, next) => {
                         error: err
                     });
                 } else {
-                    const account = new Account({
+                    const user = new User({
                         _id: mongoose.Types.ObjectId(),
                         username: req.body.username,
                         email: req.body.email,
                         password: hash,
                     })
-                    account.save()
+                    user.save()
                     .then(result => {
-                        createdAccount = {
+                        createdUser = {
                             id: result._id,
                             username: result.username,
                             email: result.email,
                             request: {
                                 method: "GET",
-                                url: `${process.env.rootURL}:${process.env.PORT}/accounts/${result._id}`
+                                url: `${process.env.rootURL}:${process.env.PORT}/users/${result._id}`
                             }
                         }
                         res.status(201).json({
-                            message: "Created account successfully!",
-                            account: createdAccount
+                            message: "Created user successfully!",
+                            user: createdUser
                         });
                     })
                     .catch(err => {
@@ -67,7 +67,7 @@ exports.accounts_register = async (req, res, next) => {
         })
     });
 }
-exports.accounts_login = async (req, res, next) => {
+exports.user_login = async (req, res, next) => {
     const { error } = await validation.loginValidation(req.body);
     if (error) { 
         return res.status(500).json({
@@ -76,16 +76,16 @@ exports.accounts_login = async (req, res, next) => {
     }
     const email = req.body.email;
     const password = req.body.password;
-    Account.findOne({email: email})
+    User.findOne({email: email})
     .exec()
-    .then(account => {
-        if(account.length < 1)
+    .then(user => {
+        if(user.length < 1)
         {
             return res.status(401).json({
                 message: 'Auth failed'
             })
         } else {
-            bcrypt.compare(password, account.password, function(err, result) {
+            bcrypt.compare(password, user.password, function(err, result) {
                 if(err)
                 {
                     return res.status(401).json({
@@ -95,7 +95,7 @@ exports.accounts_login = async (req, res, next) => {
                 if(result)
                 {
                     const token = jwt.sign({
-                        _id: account._id,
+                        _id: user._id,
                         },
                         process.env.TOKEN_SECRET, {
                             expiresIn: "1h",

@@ -4,10 +4,12 @@ const bodyParser = require("body-parser");
 const app = express();
 
 const employeesRoutes = require("./api/routes/employees");
-const accRoutes = require("./api/routes/accounts");
+const adminRoutes = require("./api/routes/admin");
+const usersRoutes = require("./api/routes/users");
 const authRoutes = require("./api/routes/auth");
 
 const checkAuth = require('./api/middleware/check-auth')
+const admin = require('./api/middleware/admin')
 
 
 app.use(morgan("dev"));
@@ -30,9 +32,10 @@ app.use((req, res, next) => {
 });
 
 //Routes
-app.use('/employees', checkAuth, employeesRoutes)
-app.use('/accounts', checkAuth, accRoutes)
 app.use('/auth', authRoutes)
+app.use('/employees', checkAuth, employeesRoutes)
+app.use('/users', checkAuth, usersRoutes)
+app.use('/admin', checkAuth, admin, adminRoutes)
 
 app.use((req, res, next) => {
   const error = new Error('Not found');
